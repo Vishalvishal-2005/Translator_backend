@@ -39,6 +39,14 @@ app.add_middleware(
 stop_camera = False
 
 def camera_loop(target_lang: str):
+    """Continuously captures video from the default camera, performs OCR on each
+    frame,
+    translates the recognized text to a target language, and overlays both the
+    original and translated text on the live video feed. The loop can be stopped by
+    pressing 'q' in the display window.
+    
+    Args:
+        target_lang (str): The language code to which the OCR text should be translated."""
     global stop_camera
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
@@ -81,6 +89,7 @@ def camera_loop(target_lang: str):
 
 @app.get("/start-camera")
 def start_camera(target_lang: str = Query(default=config.DEFAULT_TARGET_LANG)):
+    """Starts the camera if it is not already running."""
     global stop_camera
     if stop_camera:
         return {"status": "Camera already running"}
@@ -120,6 +129,8 @@ class TranslateRequest(BaseModel):
 # Helpers
 # -------------------------
 def preprocess_for_ocr(pil_image: Image.Image) -> Image.Image:
+    """Converts an image to grayscale, resizes it if necessary, and applies adaptive
+    thresholding."""
     gray = ImageOps.grayscale(pil_image)
     w, h = gray.size
     max_dim = config.MAX_DIMENSION
@@ -141,6 +152,26 @@ async def ocr_endpoint(
     src_lang: Optional[str] = Form(None),
     bbox_conf_threshold: Optional[float] = Form(None)
 ):
+    """Handle OCR endpoint requests.
+    
+    This function processes uploaded image files to extract text using Tesseract
+    OCR. It preprocesses the image, reads text data with confidence scores, filters
+    based on a confidence threshold, and translates extracted text into a target
+    language if specified.
+    
+    Args:
+        file (UploadFile): The uploaded image file.
+        target_lang (Optional[str]): The target language for translation.
+        src_lang (Optional[str]): The source language of the text in the image.
+        bbox_conf_threshold (Optional[float]): Confidence threshold for filtering bounding boxes.
+    
+    Returns:
+        OCRResponse: A response object containing extracted and translated text data along with
+            image dimensions.
+    
+    Raises:
+        HTTPException: If the uploaded file is not a valid image.
+    """
     contents = await file.read()
     try:
         pil_img = Image.open(io.BytesIO(contents)).convert("RGB")
@@ -180,6 +211,7 @@ async def ocr_endpoint(
 # -------------------------
 @app.post("/translate/")
 def translate_text(req: TranslateRequest):
+    """Translate text from one language to another."""
     if not req.text.strip():
         raise HTTPException(status_code=400, detail="No text provided")
     try:
