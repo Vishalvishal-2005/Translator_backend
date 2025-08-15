@@ -4,11 +4,10 @@
 # Tesseract executable path (Windows example)
 # e.g. r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 # On Linux typically "/usr/bin/tesseract"
-TESSERACT_CMD = r"D:\Program Files\tesseract.exe"
+# Linux paths for Render deployment
+TESSERACT_CMD = "/usr/bin/tesseract"
+TESSDATA_PREFIX = "/usr/share/tesseract-ocr/4.00/tessdata"  # adjust if needed
 
-# If Tesseract can't find tessdata automatically, set this to the tessdata folder:
-# e.g. r"D:\Program Files\Tesseract-OCR\tessdata"
-TESSDATA_PREFIX = r"D:\Program Files\tessdata"
 
 # Default OCR language(s) for Tesseract. For Tamil use 'tam' or 'tam+eng' for mixed text.
 SOURCE_LANG = "tam"
