@@ -7,6 +7,18 @@ import config  # SOURCE_LANG, DEFAULT_TARGET_LANG
 stop_camera = False
 
 def live_ocr_translator(target_lang=config.DEFAULT_TARGET_LANG):
+    """Live OCR translator using camera input.
+    
+    This function captures video from the default camera, performs OCR on each
+    frame to extract text, translates the extracted text into a target language
+    using Google Translator, and overlays both the original and translated text
+    onto the video feed. The process continues until the user presses 'q', at which
+    point the camera is stopped.
+    
+    Args:
+        target_lang (str): The target language for translation, defaulting to
+            `config.DEFAULT_TARGET_LANG`.
+    """
     global stop_camera
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
