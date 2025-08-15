@@ -6,3 +6,4 @@ opencv-python-headless
 googletrans==4.0.0-rc1
 python-multipart
 pydantic
+deep-translator
