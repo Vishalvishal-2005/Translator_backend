@@ -7,4 +7,4 @@ apt-get update
 apt-get install -y tesseract-ocr tesseract-ocr-tam
 
 # Install Python dependencies
-pip install -r translator_backend/requirements.txt
+pip install -r requirements.txt
