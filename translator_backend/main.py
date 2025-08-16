@@ -23,14 +23,17 @@ if config.TESSDATA_PREFIX:
 
 app = FastAPI(title="OCR + Translate API")
 
-# Allow CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://image-livetranslator.netlify.app"],  # exact URL
+    allow_origins=[
+        "https://image-livetranslator.netlify.app",  # Netlify
+        "http://localhost:3000",                     # local React dev
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 
